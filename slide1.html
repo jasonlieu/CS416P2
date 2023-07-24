@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slide 1</title>
+    <script src="d3.v7.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        /* Reset margin and padding for the body element */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #A4BC92;
+            color: white;
+            text-align: center;
+            height: 100vh; /* Make the content take up the entire viewport height */
+        }
+
+        /* Style the content container */
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative; /* Add this to allow absolute positioning within .slide-container */
+        }
+
+        .title {
+            font-size: xx-large;
+        }
+
+        .instructions {
+            font-size: large;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+        }
+    </style>
+</head>
+<body>
+    <!-- Content for Slide 1 -->
+    <div class="slide slide-container">
+        <div class="title" id="slide1">
+            <h2>Can Money Buy Happiness?</h2>
+        </div>
+        <div class="instructions">
+            Navigate with the arrow keys
+        </div>
+    </div>
+</body>
+</html>
