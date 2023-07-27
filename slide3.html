@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Slide 1</title>
+    <title>Slide 2</title>
     <script src="d3.v7.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
@@ -20,20 +20,242 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: row;
+        }
+
+        .right-container {
+            width: 30%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             flex-direction: column;
-            position: relative;
+        }
+
+        .left-container {
+            width: 70%; 
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .graph {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            flex-direction: column;
         }
 
         .title {
             font-size: xx-large;
         }
+
+        .scatter-plot {
+            width: 80%;
+            height: 70%;
+            overflow: hidden;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 8px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .axis-label {
+            font-size: 20px;
+            font-weight: bold;
+            fill: white;
+        }
+
+        .x-axis-label {
+            font-size: 20px;
+            font-weight: bold;
+            fill: white;
+        }
+
+        .list-item {
+            text-align: start;
+            width: 100%;
+            margin: 5px;
+            position: relative;
+            padding-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: xx-large;
+            cursor: pointer;
+        }
+
+        .list-item.selected {
+            color: #57534E;
+        }
     </style>
 </head>
 <body>
     <div class="slide slide-container">
-        <div class="title" id="slide1">
-            <h2>Can Money Buy Happiness?</h2>
+        <div class="left-container">
+            <div class="title" id="slide2">
+                <h2>World Happiness Report 2019</h2>
+            </div>
+            <div class="scatter-plot" id="scatterPlot"></div>
+        </div>
+        <div class="right-container">
+            <div class="list-item">GDP per capita</div>
+            <div class="list-item">Social support</div>
+            <div class="list-item">Healthy life expectancy</div>
+            <div class="list-item">Freedom to make life choices</div>
+            <div class="list-item">Generosity</div>
+            <div class="list-item">Perceptions of corruption</div>
         </div>
     </div>
+
+
+    <script>
+        d3.csv("2019.csv").then(function (data) {
+            const scatterPlotContainer = d3.select("#scatterPlot");
+            const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+            const width = scatterPlotContainer.node().clientWidth - margin.left - margin.right;
+            const height = scatterPlotContainer.node().clientHeight - margin.top - margin.bottom;
+
+            const svg = scatterPlotContainer
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const yScale = d3.scaleLinear()
+                .domain([d3.extent(data, d => +d["Overall rank"])[0], d3.extent(data, d => +d["Overall rank"])[1]])
+                .range([0, height]);
+
+            svg.selectAll(".dot")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => 0)
+                .attr("cy", d => yScale(+d["Overall rank"]))
+                .attr("r", 5)
+                .attr("fill", "white");
+
+            const tooltip = d3.select("body")
+                .append("div")
+                .attr("class", "tooltip")
+                .style("display", "none");
+
+            svg.append("text")
+                .attr("class", "axis-label")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom - 10)
+                .style("text-anchor", "middle")
+                .text("GDP per capita");
+
+            svg.append("text")
+                .attr("class", "axis-label")
+                .attr("x", -(height / 2))
+                .attr("y", -margin.left + 15)
+                .attr("transform", "rotate(-90)")
+                .style("text-anchor", "middle")
+                .text("Overall rank");
+
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(yScale));
+
+            const listItems = d3.selectAll(".list-item");
+            listItems.on("click", function () {
+                listItems.classed("selected", false);
+                d3.select(this).classed("selected", true);
+                const selectedIndicator = d3.select(this).text().trim();
+                svg.select(".axis-label").text(selectedIndicator);
+                updateGraph(selectedIndicator);
+            });
+            updateGraph("GDP per capita");
+            function updateGraph(selectedIndicator) {
+                const xScale = d3.scaleLinear()
+                .domain(d3.extent(data, d => +d[selectedIndicator]))
+                .range([0, width]);
+
+            const xAxis = svg.select(".x-axis")
+                .attr("transform", `translate(0, ${height})`)
+                .call(d3.axisBottom(xScale));
+
+            svg.select(".x-axis-label")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom - 10)
+                .style("text-anchor", "middle")
+                .text(selectedIndicator);
+                svg.append("g")
+            .attr("class", "x-axis");
+
+            svg.selectAll(".dot")
+                .transition()
+                .duration(1000)
+                .attr("cx", d => xScale(+d[selectedIndicator]));
+
+                svg.selectAll(".dot")
+                    .transition()
+                    .duration(1000)
+                    .attr("cx", d => xScale(+d[selectedIndicator]));
+
+                svg.selectAll(".dot")
+                    .on("mouseover", function (event, d) {
+                        d3.select(this).attr("fill", "#57534E");
+                        tooltip.style("display", "block")
+                            .style("left", `${event.pageX + 10}px`)
+                            .style("top", `${event.pageY - 10}px`)
+                            .text(`${d["Country or region"]}: ${selectedIndicator}: ${d[selectedIndicator]}, Overall rank: ${d["Overall rank"]}`);
+
+                        const cx = +d3.select(this).attr("cx");
+                        const cy = +d3.select(this).attr("cy");
+
+                        svg.append("line")
+                            .attr("class", "line-to-x-axis")
+                            .attr("x1", cx)
+                            .attr("y1", cy)
+                            .attr("x2", cx)
+                            .attr("y2", cy)
+                            .style("stroke", "#57534E")
+                            .style("stroke-width", "1px")
+                            .transition()
+                            .duration(500)
+                            .attr("y2", height);
+
+                        svg.append("line")
+                            .attr("class", "line-to-y-axis")
+                            .attr("x1", cx)
+                            .attr("y1", cy)
+                            .attr("x2", cx)
+                            .attr("y2", cy)
+                            .style("stroke", "#57534E")
+                            .style("stroke-width", "1px")
+                            .transition()
+                            .duration(400)
+                            .attr("x2", 0);
+
+                        d3.select(this).raise();
+                    })
+                    .on("mouseout", function (event, d) {
+                        d3.select(this).attr("fill", "white");
+                        tooltip.style("display", "none");
+                        svg.selectAll(".line-to-x-axis").remove();
+                        svg.selectAll(".line-to-y-axis").remove();
+                    });
+            }
+
+            listItems.nodes()[0].click();
+        }).catch(function (error) {
+            console.log("Error: " + error);
+        });
+    </script>
 </body>
 </html>

@@ -57,7 +57,6 @@
         <div class="scatter-plot" id="scatterPlot"></div>
     </div>
 
-    <script src="script.js"></script>
     <script>
         d3.csv("2019.csv").then(function (data) {
             const scatterPlotContainer = d3.select("#scatterPlot");
@@ -122,7 +121,7 @@
 
             svg.selectAll("circle")
                 .on("mouseover", function(event, d) {
-                    d3.select(this).attr("fill", "steelblue")
+                    d3.select(this).attr("fill", "#57534E")
                     tooltip.style("display", "block")
                         .style("left", `${event.pageX + 10}px`)
                         .style("top", `${event.pageY - 10}px`)
@@ -137,7 +136,7 @@
                         .attr("y1", cy)
                         .attr("x2", cx)
                         .attr("y2", cy)
-                        .style("stroke", "steelblue")
+                        .style("stroke", "#57534E")
                         .style("stroke-width", "1px")
                         .transition()
                         .duration(500)
@@ -149,7 +148,7 @@
                         .attr("y1", cy)
                         .attr("x2", cx)
                         .attr("y2", cy)
-                        .style("stroke", "steelblue")
+                        .style("stroke", "#57534E")
                         .style("stroke-width", "1px")
                         .transition()
                         .duration(400)

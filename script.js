@@ -7,7 +7,6 @@ function showSlide(slideIndex) {
     const transformX = -slideIndex * slideWidth;
     slideContainer.style("transform", `translateX(${transformX}px)`);
 
-    // Update navigation belt
     const navigationBelt = d3.select("#navigationBelt");
     const indicators = navigationBelt.selectAll(".indicator");
     indicators.classed("active", (d, i) => i === slideIndex);
