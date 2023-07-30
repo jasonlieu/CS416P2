@@ -55,3 +55,28 @@ body {
 .indicator.active {
     background-color: #57534E;
 }
+
+.indicator:not(.active):hover {
+    background-color: lightgray;
+}
+
+.arrow {
+    color: #F5F5F4;
+    font-size: 32px;
+    position: absolute;
+    top: 51%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.arrow:hover {
+    color: #57534E;
+  }
+
+.arrow-left {
+    left: calc(50vw - 85px);
+}
+
+.arrow-right {
+    left: calc(50vw + 55px);
+}

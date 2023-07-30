@@ -1,5 +1,7 @@
 let currentSlide = 0;
 
+const slides = d3.selectAll(".slide");
+
 function showSlide(slideIndex) {
     const slideContainer = d3.select(".slide-container");
     const slides = d3.selectAll(".slide");
@@ -18,7 +20,6 @@ function goToSlide(slideIndex) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const slideContainer = d3.select(".slide-container");
     const navigationBelt = d3.select("#navigationBelt");
     const slides = d3.selectAll(".slide");
 
@@ -36,5 +37,19 @@ document.addEventListener("DOMContentLoaded", function() {
         d3.select(this).on("click", function () {
             goToSlide(i);
         });
+    });
+    
+    const leftArrow = navigationBelt.select(".arrow-left");
+    leftArrow.on("click", (event) => {
+        if (currentSlide > 0) {
+            goToSlide(currentSlide - 1);
+        }
+    });
+    
+    const rightArrow = navigationBelt.select(".arrow-right");
+    rightArrow.on("click", (event) => {
+        if (currentSlide < slides.size() - 1) {
+            goToSlide(currentSlide + 1);
+        }
     });
 });

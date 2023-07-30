@@ -237,7 +237,6 @@
             }
             updateGraph("GDP per capita");
             function updateGraph(selectedIndicator) {
-                console.log(selectedIndicator)
                 const xScale = d3.scaleLinear()
                 .domain(d3.extent(data, d => +d[selectedIndicator]))
                 .range([0, width]);
