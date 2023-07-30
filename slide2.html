@@ -47,6 +47,14 @@
             font-weight: bold;
             fill: white;
         }
+
+        .instructions {
+            font-size: large;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
@@ -55,6 +63,10 @@
             <h2>World Happiness Report 2019</h2>
         </div>
         <div class="scatter-plot" id="scatterPlot"></div>
+        
+        <div class="instructions">
+            Hover over a point to see the country it represents
+        </div>
     </div>
 
     <script>
@@ -165,7 +177,7 @@
                     svg.selectAll(".line-to-y-axis").remove();
                 })
         }).catch(function (error) {
-            console.log("Error loading the data: " + error);
+            console.log("Error: " + error);
         });
     </script>
 </body>
